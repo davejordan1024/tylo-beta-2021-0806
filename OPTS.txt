@@ -1,0 +1,4 @@
+appx	500
+appy	500
+lastgame	cynthia	21-07-23 00:59:08
+lastsort	by status by name
