@@ -198,28 +198,21 @@ void Game::clear() {									// clear board and rack
 }
 void Game::rename() {								// edit opponent name
 
-	char *newnm = 0;
-	int len;
+	char *newnm;
+//	int len;
 
-	if(char *newnm = ty::getopp("Please enter a new name.")) {
-		len = strlen(newnm);
-		if(len >= OPPMAX) {
-			fl_alert("%s", "Name too long.");
-			return;
-		}
-		if(len == 0)
-			return;
+	if(newnm = ty::getopp("Please enter a new name.")) {
+
+		delete [] opp;
+		opp = newnm;								// ty::getopp puts newnm in heap
+		Brwsr *brwsr = app->brwsr;
+		brwsr->remove(brwsr->value());
+		brwsr->add_entry(app->curgame);
+		brwsr->sort(NULL, app->curgame);
+		Numcell *oc = app->curtbl->oppcnt;
+		oc->text(opp, oc->value());			// assign new opp name and old count to oppcnt on status line. space for name is a char array of max size.
+		oc->redraw();
 	}
-	delete [] opp;
-	opp = new char[len + 1];
-	strncpy(opp, newnm, len);
-	opp[len] = '\0';
-	Brwsr *brwsr = app->brwsr;
-	brwsr->remove(brwsr->value());
-	brwsr->add_entry(app->curgame);
-	brwsr->sort(NULL, app->curgame);
-	Numcell *oc = app->curtbl->oppcnt;
-	oc->text(opp, oc->value());			// assign new opp name and old count to oppcnt on status line. space for name is a char array of max size.
 }
 void Game::rematch() {								// clear board, rack, times
 
@@ -232,6 +225,7 @@ void Game::rematch() {								// clear board, rack, times
 			stat = GSTAT_ACTV;
 			app->nactv++;
 		}
+		buffy->text(0);
 		app->brwsr->sort(NULL, app->curgame);
 	}
 }
